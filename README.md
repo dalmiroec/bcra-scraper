@@ -62,18 +62,3 @@ docker logs bcra-scraper --tail 20 -f
 | `circular` | RUNOR, OPASI, CREFI, etc. |
 | `fecha` | Fecha real de la comunicación (YYYY-MM-DD) |
 
-## Queries útiles en Grafana
-
-```logql
-# Todas las comunicaciones
-{job="bcra-scraper-v4"} | json
-
-# RUNOR de hoy
-{job="bcra-scraper-v4", circular="RUNOR", fecha="${__from:date:YYYY-MM-DD}"}
-
-# Buscar por palabra clave
-{job="bcra-scraper-v4"} | json | asunto =~ "(?i)Tecnolog|Seguridad"
-
-# Conteo por tipo
-sum by (tipo) (count_over_time({job="bcra-scraper-v4"}[$__range]))
-```
