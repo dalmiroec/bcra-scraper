@@ -1,0 +1,30 @@
+# Alternativa sin Docker: systemd service para Debian
+# Copiar a: /etc/systemd/system/bcra-scraper.service
+#
+# Comandos:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable bcra-scraper
+#   sudo systemctl start bcra-scraper
+#   sudo journalctl -u bcra-scraper -f
+
+[Unit]
+Description=BCRA Communications Scraper
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bcra
+WorkingDirectory=/opt/bcra-scraper
+EnvironmentFile=/opt/bcra-scraper/.env
+ExecStart=/opt/bcra-scraper/venv/bin/python /opt/bcra-scraper/scraper/bcra_scraper.py
+Restart=on-failure
+RestartSec=60s
+
+# Logs van a journald (además del archivo)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bcra-scraper
+
+[Install]
+WantedBy=multi-user.target
